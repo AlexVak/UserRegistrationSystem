@@ -1,6 +1,7 @@
 package com.alexvak.urs.controllers;
 
 import com.alexvak.urs.domain.User;
+import com.alexvak.urs.exceptions.UserNotFoundException;
 import com.alexvak.urs.services.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,9 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 public class UserControllerTest {
 
@@ -65,5 +68,16 @@ public class UserControllerTest {
 
     @Test
     public void deleteUser() {
+    }
+
+    @Test
+    public void testUserNotFound() throws Exception {
+
+        UserNotFoundException userNotFoundException = new UserNotFoundException(50L);
+        when(userService.findById(50L)).thenThrow(userNotFoundException);
+
+        mockMvc.perform(get("/api/user/50"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{'message':'User not found. ID: 50'}"));
     }
 }
