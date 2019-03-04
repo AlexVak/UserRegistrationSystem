@@ -3,7 +3,6 @@ services:
   - docker
 language: java
 script:
-  - cd server
   - mvn clean install
 
 after_success:
