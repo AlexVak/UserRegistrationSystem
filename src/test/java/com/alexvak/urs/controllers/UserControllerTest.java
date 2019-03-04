@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@SpringBootTest
 public class UserControllerTest {
 
     @Mock
@@ -31,12 +34,16 @@ public class UserControllerTest {
 
     private User commonUser;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         UserController userController = new UserController(userService);
+        ControllerExceptionHandler controllerExceptionHandler = new ControllerExceptionHandler(messageSource);
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
-                .setControllerAdvice(ControllerExceptionHandler.class).build();
+                .setControllerAdvice(controllerExceptionHandler).build();
 
         commonUser = new User();
         commonUser.setId(1L);
