@@ -4,6 +4,8 @@ import com.alexvak.urs.exceptions.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,11 +18,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 @Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
+    private final MessageSource messageSource;
+
+    public ControllerExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ResponseException> handleUserNotFoundException(Exception exception) {
@@ -69,9 +78,11 @@ public class ControllerExceptionHandler {
         FieldValidationError fieldValidationError =
                 new FieldValidationError();
         if (error != null) {
+            Locale currentLocale = LocaleContextHolder.getLocale();
+            String msg = messageSource.getMessage(error.getDefaultMessage(), null, currentLocale);
             fieldValidationError.setField(error.getField());
             fieldValidationError.setMessageType(MessageType.ERROR);
-            fieldValidationError.setMessage(error.getDefaultMessage());
+            fieldValidationError.setMessage(msg);
         }
         return fieldValidationError;
     }
