@@ -4,11 +4,13 @@ import com.alexvak.urs.domain.User;
 import com.alexvak.urs.exceptions.DuplicateUserFoundException;
 import com.alexvak.urs.exceptions.UserNotFoundException;
 import com.alexvak.urs.repositories.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -59,13 +61,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        Optional<User> userDTOOptional = userRepository.findById(id);
-
-        if (!userDTOOptional.isPresent()) {
-            throw new UserNotFoundException(id);
-
-        }
-        
+        User currentUser = findById(id);
+        log.info("Removing [{}] user...", currentUser);
         userRepository.deleteById(id);
     }
 }

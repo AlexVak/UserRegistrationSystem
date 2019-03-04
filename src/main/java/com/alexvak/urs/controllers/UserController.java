@@ -25,7 +25,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @PostMapping(value = {"", "/"}, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = {"", "/"}, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> createUser(@Valid @RequestBody final User user) {
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
     }
@@ -35,7 +35,7 @@ public class UserController {
         return new ResponseEntity<>(userService.findById(Long.valueOf(userId)), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> updateUser(@PathVariable("userId") final String userId,
                                            @Valid @RequestBody final User user) {
         return new ResponseEntity<>(userService.updateUser(Long.valueOf(userId), user), HttpStatus.OK);
