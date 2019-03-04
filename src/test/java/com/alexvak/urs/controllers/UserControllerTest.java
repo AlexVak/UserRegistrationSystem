@@ -1,6 +1,7 @@
 package com.alexvak.urs.controllers;
 
 import com.alexvak.urs.domain.User;
+import com.alexvak.urs.exceptions.DuplicateUserFoundException;
 import com.alexvak.urs.exceptions.UserNotFoundException;
 import com.alexvak.urs.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -123,6 +124,22 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/user/50"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("{'message':'User not found. ID: 50'}"));
+    }
+
+    @Test
+    public void testDuplicateUserFoundException() throws Exception {
+
+        DuplicateUserFoundException duplicateUserFoundException = new DuplicateUserFoundException("commonUser");
+        when(userService.createUser(commonUser)).thenThrow(duplicateUserFoundException);
+
+
+        mockMvc.perform(post("/api/user")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(asJsonString(commonUser)))
+                .andExpect(status().isConflict())
+                .andExpect(content().json("{'message':'Unable to create new user. A User with name commonUser already exist.'}"));
+
+        verify(userService, times(1)).createUser(commonUser);
     }
 
     private static String asJsonString(final Object obj) {
