@@ -1,5 +1,6 @@
 package com.alexvak.urs.controllers;
 
+import com.alexvak.urs.config.UserRegistrationConfiguration;
 import com.alexvak.urs.domain.User;
 import com.alexvak.urs.exceptions.DuplicateUserFoundException;
 import com.alexvak.urs.exceptions.UserNotFoundException;
@@ -10,9 +11,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@ContextConfiguration(classes = UserRegistrationConfiguration.class)
 public class UserControllerTest {
 
     @Mock
@@ -35,7 +36,7 @@ public class UserControllerTest {
     private User commonUser;
 
     @Autowired
-    private MessageSource messageSource;
+    MessageSource messageSource;
 
     @Before
     public void setUp() throws Exception {
