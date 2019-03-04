@@ -67,7 +67,6 @@ public class UserControllerTest {
 
     @Test
     public void createUser() throws Exception {
-
         when(userService.createUser(any())).thenReturn(commonUser);
 
         mockMvc.perform(post("/api/user")
@@ -81,7 +80,6 @@ public class UserControllerTest {
 
     @Test
     public void getUserById() throws Exception {
-
         when(userService.findById(commonUser.getId())).thenReturn(commonUser);
 
         mockMvc.perform(get("/api/user/{id}", commonUser.getId()))
@@ -117,7 +115,6 @@ public class UserControllerTest {
 
     @Test
     public void testUserNotFound() throws Exception {
-
         UserNotFoundException userNotFoundException = new UserNotFoundException(50L);
         when(userService.findById(50L)).thenThrow(userNotFoundException);
 
@@ -128,10 +125,8 @@ public class UserControllerTest {
 
     @Test
     public void testDuplicateUserFoundException() throws Exception {
-
         DuplicateUserFoundException duplicateUserFoundException = new DuplicateUserFoundException("commonUser");
         when(userService.createUser(commonUser)).thenThrow(duplicateUserFoundException);
-
 
         mockMvc.perform(post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
